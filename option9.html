@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Builder · Combined Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="option3.css">
+<link rel="stylesheet" href="option6.css">
+<link rel="stylesheet" href="option7.css">
+<link rel="stylesheet" href="option9.css?v=3">
+</head>
+<body data-store="agentbuilder.option9" data-fresh="1" data-ai="1" data-hybrid="1">
+<div id="app">
+
+  <!-- top navigation: name, status, undo, redo, test, publish -->
+  <header class="topbar">
+    <button class="icon-btn" id="btnHome" title="Home"><span data-icon="home" data-size="18"></span></button>
+    <span class="sep"></span>
+    <input class="wf-name" id="wfName" value="Untitled workflow" aria-label="Workflow name" spellcheck="false">
+    <span class="wf-status" id="wfStatus">Draft</span>
+    <span class="saved" id="savedAt">Not saved yet</span>
+
+    <div class="top-actions">
+      <button class="icon-btn" id="btnUndo" title="Undo (Ctrl+Z)"><span data-icon="undo" data-size="17"></span></button>
+      <button class="icon-btn" id="btnRedo" title="Redo (Ctrl+Y)"><span data-icon="redo" data-size="17"></span></button>
+      <button class="btn" id="btnNew" title="Start a new workflow"><span data-icon="file" data-size="16"></span><span class="lbl">New</span></button>
+      <button class="btn btn-ai" id="btnAI" title="Open the AI assistant"><span data-icon="sparkles" data-size="16"></span><span class="lbl">AI Assistant</span></button>
+      <button class="btn" id="btnSave" title="Save"><span data-icon="save" data-size="16"></span><span class="lbl">Save</span></button>
+      <button class="btn" id="btnCredits" title="Credits"><span data-icon="coins" data-size="16"></span><span id="credits">10,150</span><span class="lbl">Credits</span></button>
+      <button class="btn btn-run" id="btnRun" title="Test the workflow" disabled><span data-icon="play" data-size="14"></span><span class="lbl">Test</span></button>
+      <button class="btn btn-dark" id="btnPublish" title="Review and publish"><span data-icon="rocket" data-size="16"></span><span class="lbl">Publish</span></button>
+      <button id="btnMarket" hidden></button><button id="btnDeploy" hidden></button>
+    </div>
+  </header>
+
+  <div class="main">
+
+    <!-- left: searchable library, essentials first -->
+    <aside class="lib" id="lib">
+      <div class="lib-head">
+        <div><b>Node library</b><span>Click or drag to add</span></div>
+        <button class="icon-btn" id="libX" title="Hide library"><span data-icon="chevron" data-size="16"></span></button>
+      </div>
+      <div class="ess" id="ess"></div>
+      <div class="panel-view" id="toolsView">
+        <button class="lib-back" id="libBack"><span data-icon="chevron" data-size="14"></span>Essentials</button>
+        <div class="search">
+          <span data-icon="search" data-size="16"></span>
+          <input id="toolSearch" type="text" placeholder="Search all tools..." autocomplete="off">
+        </div>
+        <div class="cats" id="cats"></div>
+        <button id="panelClose" hidden></button>
+      </div>
+      <div class="lib-foot"><button class="lib-more" id="libMore">Browse all 80 tools<span data-icon="chevron" data-size="14"></span></button></div>
+    </aside>
+
+    <!-- centre: canvas with contextual + controls -->
+    <div class="work">
+      <section class="canvas" id="canvas">
+        <div class="world" id="world">
+          <svg class="edges" id="edges">
+            <g id="edgeLayer"></g>
+            <path id="tempEdge" class="edge-line temp" d=""/>
+          </svg>
+          <div id="nodes"></div>
+        </div>
+
+        <div class="empty-hint" id="emptyHint"></div>
+
+        <div class="start" id="start">
+          <button class="start-btn" id="startBtn" title="Add the first step"><span data-icon="plus" data-size="26"></span></button>
+          <b>Add your first step</b>
+          <p>Start with a trigger. After that, a <i>+</i> appears after every step with suggestions. It connects automatically.</p>
+        </div>
+        <div class="coach" id="coach" hidden>Click the <b>+</b> to add the next step. It connects automatically.</div>
+        <div class="ctx" id="ctx" hidden></div>
+
+        <div class="issues" id="issues" hidden>
+          <span class="iw" data-icon="warn" data-size="18"></span>
+          <span class="it" id="issueText"></span>
+          <button class="mini" id="issueGo">Review</button>
+          <button class="icon-btn" id="issueX" title="Dismiss"><span data-icon="x" data-size="16"></span></button>
+        </div>
+
+        <!-- path to publish -->
+        <div class="gd" id="guide" hidden>
+          <div class="gd-top">
+            <div class="gd-name"><small id="gdMode">Guided creation</small><b id="gdTitle">Path to publish</b></div>
+            <div class="gd-btns"><button class="mini" id="gdMin" title="Collapse">–</button><button class="mini" id="gdX" title="Dismiss">×</button></div>
+          </div>
+          <div class="gd-prog"><i id="gdBar"></i></div>
+          <div class="gd-count" id="gdCount"></div>
+          <div class="gd-list" id="gdList"></div>
+        </div>
+
+        <button class="float-btn fl" id="openLib" title="Show node library"><span data-icon="grid" data-size="16"></span><span>Library</span></button>
+        <button class="float-btn fr" id="openRight" title="Show settings and AI"><span data-icon="sparkles" data-size="16"></span><span>Settings / AI</span></button>
+
+        <div class="toolbar" id="toolbar">
+          <button class="tb" id="tbTools" title="Tools panel"><span data-icon="plus" data-size="20"></span></button>
+          <button class="tb" id="tbNew" title="New workflow"><span data-icon="file" data-size="20"></span></button>
+          <button class="tb" id="tbHistory" title="Run history"><span data-icon="clock" data-size="20"></span></button>
+          <button class="tb" id="tbZoomIn" title="Zoom in"><span data-icon="zoomIn" data-size="20"></span></button>
+          <button class="tb" id="tbZoomOut" title="Zoom out"><span data-icon="zoomOut" data-size="20"></span></button>
+          <button class="tb" id="tbFit" title="Fit to screen"><span data-icon="fit" data-size="20"></span></button>
+          <button class="tb" id="tbImport" title="Import JSON"><span data-icon="upload" data-size="20"></span></button>
+          <button class="tb" id="tbExport" title="Export JSON"><span data-icon="download" data-size="20"></span></button>
+        </div>
+
+        <div class="history-pop" id="historyPop" hidden></div>
+        <div class="minimap" id="minimap"><canvas id="mmCanvas" width="400" height="240"></canvas></div>
+      </section>
+
+      <!-- bottom: execution history, logs, errors and output -->
+      <section class="logs" id="logs">
+        <button class="logs-head" id="logsHead">
+          <span>Execution logs</span><span class="logs-count" id="logCount"></span>
+          <span class="logs-chev" data-icon="chevron" data-size="16"></span>
+        </button>
+        <div class="logs-body" id="logsBody"></div>
+      </section>
+    </div>
+
+    <!-- right: settings (basic + advanced) and the AI assistant -->
+    <aside class="panel rpane" id="panel">
+      <div class="rtabs">
+        <button class="rt on" data-t="cfg">Settings<i id="issueN" hidden></i></button>
+        <button class="rt" data-t="ai"><span data-icon="sparkles" data-size="14"></span>AI Assistant</button>
+        <button class="icon-btn" id="rX" title="Hide this panel"><span data-icon="chevron" data-size="16"></span></button>
+      </div>
+
+      <div class="rbody" id="paneCfg">
+        <div class="cfg-empty" id="cfgEmpty">
+          <div class="ce-ico"><span data-icon="sliders" data-size="22"></span></div>
+          <b>Nothing selected</b>
+          <p>Click a node to see its essential settings. Advanced options stay tucked away until you need them.</p>
+        </div>
+        <div class="panel-view" id="configView" hidden>
+          <div class="panel-head cfg-head">
+            <button class="icon-btn" id="cfgBack" title="Deselect"><span data-icon="back" data-size="18"></span></button>
+            <div class="cfg-ico" id="cfgIcon"></div>
+            <div class="cfg-titles">
+              <h2 id="cfgTitle"></h2>
+              <p id="cfgSub"></p>
+            </div>
+          </div>
+          <div class="cfg-body">
+            <div class="cfg-conn" id="cfgConn"></div>
+            <div id="cfgForm"></div>
+          </div>
+          <div class="cfg-foot">
+            <button class="btn btn-danger" id="cfgDelete"><span data-icon="trash" data-size="16"></span>Delete node</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="rbody" id="paneAI" hidden>
+        <div class="ai-head"><span>Ask AI to build or change the workflow. The canvas updates live.</span><button class="mini" id="chatNew">New chat</button></div>
+        <div class="chat-msgs" id="msgs"></div>
+        <div class="chat-foot">
+          <div class="sugg" id="sugg"></div>
+          <div class="composer">
+            <textarea id="chatInput" rows="3" placeholder="Ask to build or change something..."></textarea>
+            <button class="send" id="chatSend" title="Send"></button>
+          </div>
+          <div class="chat-note">AI can make mistakes. Review the workflow before you publish it.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- entry screen -->
+<div class="landing" id="landing">
+  <button class="icon-btn land-x" id="landX" title="Skip to the editor"><span data-icon="x" data-size="20"></span></button>
+  <div class="land-in">
+    <div class="land-logo"><span data-icon="sparkles" data-size="24"></span></div>
+    <h1>How would you like to create your workflow?</h1>
+    <p>Pick the way that fits you. You can mix them any time: start from a template, then ask AI to change it.</p>
+
+    <div class="land-tag"><span>Describe your workflow</span><em>Recommended for beginners</em></div>
+    <div class="land-box">
+      <textarea id="landInput" rows="3" placeholder="e.g. Whenever a customer submits a contact form, analyse the enquiry, classify its priority and notify the sales team."></textarea>
+      <button class="send" id="landSend" title="Generate workflow"></button>
+    </div>
+    <div class="land-ex" id="landEx"></div>
+
+    <div class="land-label">Or start another way</div>
+    <div class="modes">
+      <button class="mode" id="modeTpl"><span class="mi" data-icon="grid" data-size="20"></span><b>Use a template</b><span>Start with a pre-built workflow</span></button>
+      <button class="mode" id="modeGuide"><span class="mi" data-icon="check" data-size="20"></span><b>Guided creation</b><span>Build it step by step</span></button>
+      <button class="mode" id="modeSample"><span class="mi" data-icon="play" data-size="18"></span><b>Explore a sample</b><span>Learn from a working example</span></button>
+      <button class="mode" id="landBlank"><span class="mi" data-icon="file" data-size="20"></span><b>Start from scratch</b><span>Open an empty canvas</span></button>
+    </div>
+    <button id="landTpl" hidden></button>
+  </div>
+</div>
+
+<!-- template gallery -->
+<div class="modal" id="tplModal" hidden>
+  <div class="mcard wide">
+    <div class="mhead"><div><b>Choose a template</b><span>Ready-made workflows. You can change everything afterwards.</span></div><button class="icon-btn" id="tplX" title="Close"><span data-icon="x" data-size="18"></span></button></div>
+    <div class="mtools"><label class="srch">
+      <span data-icon="search" data-size="16"></span><input id="tplQ" type="text" placeholder="Search templates..." autocomplete="off"></label></div>
+    <div class="tgrid" id="tplGrid"></div>
+  </div>
+</div>
+
+<!-- publish review -->
+<div class="modal" id="pubModal" hidden>
+  <div class="mcard">
+    <div class="mhead"><div><b>Review before publishing</b><span id="pubSub">Checks run automatically.</span></div><button class="icon-btn" id="pubX" title="Close"><span data-icon="x" data-size="18"></span></button></div>
+    <div class="pchecks" id="pubChecks"></div>
+    <div class="pfoot"><button class="btn" id="pubRun">Run a preview</button><span class="sp"></span><button class="btn" id="pubCancel">Not yet</button><button class="btn btn-pri" id="pubGo">Publish</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" accept="application/json,.json" hidden>
+
+<script src="nodes.js?v=4"></script>
+<script>Object.assign(ICON, {
+  undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+  redo: '<path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>'
+});</script>
+<script src="templates.js"></script>
+<script src="app.js?v=4"></script>
+<script src="option3.js?v=4"></script>
+<script src="option5.js"></script>
+<script src="option6.js"></script>
+<script src="option7.js"></script>
+<script src="option9.js?v=2"></script>
+</body>
+</html>

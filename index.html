@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Builder UX Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shell.css">
+</head>
+<body>
+<div class="shell" id="shell">
+  <aside class="side" id="side">
+    <div class="side-head">
+      <div class="logo">S</div>
+      <div class="side-title"><b>SNS Square</b><span>Agent Builder UX Lab</span></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <button class="collapse" id="collapse" title="Collapse sidebar"></button>
+      <span class="side-note" id="sideNote"></span>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="bar" id="bar" hidden>
+      <div class="bar-left">
+        <button class="bar-btn" id="barHome" title="Back to dashboard"></button>
+        <div class="bar-title"><span id="barNum"></span><b id="barName"></b></div>
+        <span class="chip" id="barChip"></span>
+      </div>
+      <div class="bar-right">
+        <button class="bar-btn text" id="barAbout"></button>
+        <button class="bar-btn" id="barPrev" title="Previous option"></button>
+        <button class="bar-btn" id="barNext" title="Next option"></button>
+      </div>
+    </header>
+    <div class="stage" id="stage"></div>
+    <aside class="about" id="about" hidden></aside>
+  </main>
+</div>
+<script src="nodes.js?v=4"></script>
+<script src="shell.js"></script>
+</body>
+</html>

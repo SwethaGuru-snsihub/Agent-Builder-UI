@@ -1,0 +1,64 @@
+/* Option 6 · Contextual Canvas */
+:root { --pl: #2f5bea; }
+
+#tbTools, #toolsView { display: none !important; }
+.empty-hint { display: none !important; }
+
+/* + buttons live in world space, so they follow pan and zoom */
+.plus-layer { position: absolute; left: 0; top: 0; width: 0; height: 0; overflow: visible; z-index: 4; }
+.plus { position: absolute; width: 24px; height: 24px; border-radius: 50%; border: 0; background: var(--pl); color: #fff; display: grid; place-items: center; padding: 0; box-shadow: 0 2px 8px rgba(47,91,234,.4); transition: transform .12s, box-shadow .12s; }
+.plus:hover { transform: scale(1.15); box-shadow: 0 3px 12px rgba(47,91,234,.55); }
+.plus:before { content: ''; position: absolute; right: 100%; top: 50%; width: 20px; border-top: 2px dashed #b3bdd6; }
+.plus.open { background: #1d3fb8; transform: scale(1.1); }
+.plus.hint:after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--pl); animation: ring 1.4s ease-out infinite; }
+@keyframes ring { 0% { transform: scale(.7); opacity: .9; } 100% { transform: scale(1.5); opacity: 0; } }
+.plus.mid { width: 18px; height: 18px; background: #fff; color: var(--pl); border: 1.5px solid #b9c5f2; box-shadow: none; opacity: 0; }
+.plus.mid:before { display: none; }
+.plus.mid:hover, .plus.mid.open { opacity: 1; background: var(--pl); color: #fff; }
+.canvas:hover .plus.mid { opacity: .55; }
+.canvas:hover .plus.mid:hover { opacity: 1; }
+.plus .tip { position: absolute; left: 50%; top: 100%; transform: translate(-50%, 4px); background: var(--ink); color: #fff; font-size: 10.5px; padding: 3px 8px; border-radius: 6px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .12s; }
+.plus:hover .tip { opacity: 1; }
+.plus .tag { position: absolute; left: 30px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--mute); white-space: nowrap; pointer-events: none; }
+
+/* empty state */
+.start { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); text-align: center; width: 320px; z-index: 3; transition: opacity .25s; }
+.start[hidden] { display: none; }
+.start.gone { opacity: 0; pointer-events: none; }
+.start-btn { width: 76px; height: 76px; border-radius: 50%; border: 2px dashed #9aaae6; background: #fff; color: var(--pl); display: grid; place-items: center; margin: 0 auto 16px; transition: all .15s; box-shadow: 0 8px 24px rgba(47,91,234,.12); }
+.start-btn:hover { background: var(--pl); color: #fff; border-style: solid; transform: scale(1.06); }
+.start b { display: block; font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.start p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.65; }
+.start p i { font-style: normal; display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--pl); color: #fff; font-size: 12px; line-height: 1; vertical-align: -3px; }
+
+.coach { position: absolute; left: 50%; bottom: 74px; transform: translateX(-50%); z-index: 6; background: var(--ink); color: #fff; font-size: 12.5px; padding: 9px 16px; border-radius: 99px; box-shadow: 0 8px 24px rgba(0,0,0,.2); white-space: nowrap; max-width: calc(100% - 40px); }
+.coach[hidden] { display: none; }
+.coach b { background: var(--pl); border-radius: 50%; width: 16px; height: 16px; display: inline-grid; place-items: center; font-size: 12px; margin: 0 2px; }
+
+/* contextual menu */
+.ctx { position: absolute; z-index: 8; width: 272px; max-height: 420px; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 14px 40px rgba(0,0,0,.16); overflow: hidden; animation: ctxin .14s ease-out; }
+.ctx[hidden] { display: none; }
+@keyframes ctxin { from { opacity: 0; transform: translateY(4px) scale(.98); } to { opacity: 1; transform: none; } }
+.cx-tabs { flex: none; display: flex; gap: 4px; padding: 8px 8px 0; }
+.cx-tabs button { flex: 1; padding: 8px 0; border: 0; border-radius: 8px; background: transparent; font-size: 12.5px; color: var(--mute); font-weight: 500; }
+.cx-tabs button.on { background: #eef2ff; color: var(--pl); }
+.cx-tabs button:disabled { opacity: .5; cursor: not-allowed; }
+.cx-search { flex: none; margin: 8px 8px 4px; display: flex; align-items: center; gap: 8px; padding: 0 10px; height: 34px; border: 1px solid var(--line); border-radius: 9px; color: var(--mute); }
+.cx-search:focus-within { border-color: var(--pl); }
+.cx-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 12.5px; color: var(--ink); }
+.cx-body { flex: 1; min-height: 0; overflow: auto; padding: 4px 6px 8px; }
+.cx-h { padding: 8px 8px 4px; font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--mute); font-weight: 500; }
+.cx-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 7px 8px; border: 0; background: transparent; border-radius: 9px; text-align: left; font-size: 12.5px; color: var(--ink); }
+.cx-row:hover { background: var(--soft); }
+.cx-row .tl { flex: none; width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; color: #fff; font-size: 9.5px; font-weight: 600; text-transform: uppercase; }
+.cx-row .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cx-row .tx span { font-size: 11px; color: var(--mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cx-row .ct { font-size: 11px; color: var(--mute); }
+.cx-row .ch { color: var(--mute); display: inline-grid; transform: rotate(-90deg); }
+.cx-back { display: flex; align-items: center; gap: 6px; width: 100%; padding: 8px; border: 0; background: transparent; font-size: 12.5px; font-weight: 500; color: var(--ink); border-radius: 9px; }
+.cx-back:hover { background: var(--soft); }
+.cx-back svg { transform: rotate(90deg); }
+.cx-none { padding: 18px 10px; font-size: 12px; color: var(--mute); text-align: center; }
+.cx-note { padding: 6px 8px 2px; font-size: 11.5px; color: var(--mute); line-height: 1.5; }
+
+@media (max-width: 1180px) { .start { width: 270px; } }

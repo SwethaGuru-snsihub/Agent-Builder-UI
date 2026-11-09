@@ -1,0 +1,54 @@
+/* Option 5 · Split-Screen: library | canvas | configuration + AI */
+:root { --ai: #6d4aff; }
+
+.landing { display: none !important; }
+#tbTools, #panelClose { display: none; }
+
+/* ---------- left: library (reuses the engine's tool list) ---------- */
+.lib { width: 262px; flex: none; display: flex; flex-direction: column; background: #fff; border-right: 1px solid var(--line); min-height: 0; transition: width .22s ease; overflow: hidden; }
+.lib-head { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 14px 10px 8px 18px; white-space: nowrap; }
+.lib-head b { display: block; font-size: 15px; font-weight: 600; }
+.lib-head span { font-size: 11.5px; color: var(--mute); }
+.lib-head .icon-btn svg { transform: rotate(90deg); }
+#toolsView[hidden] { display: flex !important; } /* the library stays visible while a node is selected */
+.lib .panel-view { min-width: 262px; }
+
+/* ---------- right: configure + AI ---------- */
+.rpane { width: 370px; transition: width .22s ease; }
+.rtabs { flex: none; display: flex; align-items: center; gap: 4px; padding: 8px 10px 0 14px; border-bottom: 1px solid var(--line); }
+.rt { border: 0; background: transparent; padding: 10px 12px; font-size: 13px; color: var(--ink-2); border-bottom: 2px solid transparent; margin-bottom: -1px; display: inline-flex; align-items: center; gap: 6px; }
+.rt { white-space: nowrap; }
+.rt:hover { color: var(--ink); }
+.rt.on { color: var(--ink); font-weight: 500; border-bottom-color: var(--ink); }
+.rt[data-t=ai].on { border-bottom-color: var(--ai); color: #4b2fd6; }
+.rt i { font-style: normal; min-width: 17px; height: 17px; padding: 0 5px; border-radius: 99px; background: #fff0d4; color: #b45309; font-size: 10.5px; font-weight: 600; display: inline-grid; place-items: center; }
+.rt i[hidden] { display: none; }
+#rX { margin-left: auto; margin-bottom: 4px; }
+#rX svg { transform: rotate(-90deg); }
+.rbody { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.rbody[hidden] { display: none; }
+.cfg-empty { margin: auto; padding: 24px; text-align: center; color: var(--mute); max-width: 260px; }
+.cfg-empty[hidden] { display: none; }
+.cfg-empty .ce-ico { width: 48px; height: 48px; margin: 0 auto 12px; border-radius: 14px; background: var(--soft); display: grid; place-items: center; color: var(--ink-2); }
+.cfg-empty b { display: block; color: var(--ink); font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.cfg-empty p { margin: 0; font-size: 12.5px; line-height: 1.6; }
+
+.ai-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; font-size: 11.5px; color: var(--mute); border-bottom: 1px solid var(--line); line-height: 1.5; }
+.mini { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 4px 10px; font-size: 11.5px; color: var(--ink-2); flex: none; }
+.mini:hover { background: var(--soft); color: var(--ink); }
+#paneAI .chat-msgs { padding: 16px 14px; }
+
+/* ---------- centre ---------- */
+.issues { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 6; display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 14px; background: #fff4f1; border: 1px solid #f6d3c9; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.08); font-size: 12.5px; white-space: nowrap; max-width: calc(100% - 40px); }
+.issues[hidden] { display: none; }
+.issues .iw { color: #b45309; display: inline-grid; }
+.float-btn { position: absolute; top: 14px; z-index: 6; display: none; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--line); background: #fff; border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,.08); font-size: 12px; color: var(--ink-2); }
+.float-btn:hover { background: var(--soft); color: var(--ink); }
+.float-btn.fl { left: 14px; } .float-btn.fr { right: 14px; }
+body.lib-off .float-btn.fl, body.r-off .float-btn.fr { display: inline-flex; }
+body.lib-off .lib { width: 0; border-right: 0; }
+body.r-off #panel { display: none; }
+body.lib-off .toolbar { top: 62px; }
+
+@media (max-width: 1320px) { .lib { width: 224px; } .lib .panel-view { min-width: 224px; } .rpane { width: 330px; } }
+@media (max-width: 1080px) { .lib { width: 200px; } .lib .panel-view { min-width: 200px; } .rpane { width: 290px; } }

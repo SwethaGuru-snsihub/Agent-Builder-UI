@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Builder · Option 6 · Contextual Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="option6.css">
+</head>
+<body data-store="agentbuilder.option6" data-fresh="1">
+<div id="app">
+
+  <header class="topbar">
+    <button class="icon-btn" id="btnHome" title="Home"><span data-icon="home" data-size="18"></span></button>
+    <span class="sep"></span>
+    <div class="brand">Agent<b>Builder</b></div>
+    <span class="saved" id="savedAt">Not saved yet</span>
+    <span class="mode-pill" title="Demo of UX Option 6">Option 6 · Contextual Canvas</span>
+
+    <div class="top-actions">
+      <button class="btn" id="btnAI" title="AI Generate"><span data-icon="sparkles" data-size="16"></span><span class="lbl">AI Generate</span></button>
+      <button class="btn" id="btnSave" title="Save"><span data-icon="save" data-size="16"></span><span class="lbl">Save</span></button>
+      <button class="btn" id="btnCredits" title="Credits"><span data-icon="coins" data-size="16"></span><span id="credits">10,150</span><span class="lbl">Credits</span></button>
+      <button class="btn btn-run" id="btnRun" title="Run Workflow" disabled><span data-icon="play" data-size="14"></span><span class="lbl">Run Workflow</span></button>
+      <button class="btn" id="btnMarket" title="Marketplace"><span data-icon="share" data-size="16"></span><span class="lbl">Marketplace</span></button>
+      <button class="btn btn-dark" id="btnDeploy" title="Deploy Live"><span data-icon="rocket" data-size="16"></span><span class="lbl">Deploy Live</span></button>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="work">
+      <section class="canvas" id="canvas">
+        <div class="world" id="world">
+          <svg class="edges" id="edges">
+            <g id="edgeLayer"></g>
+            <path id="tempEdge" class="edge-line temp" d=""/>
+          </svg>
+          <div id="nodes"></div>
+        </div>
+
+        <div class="empty-hint" id="emptyHint"></div>
+
+        <!-- first-node call to action -->
+        <div class="start" id="start">
+          <button class="start-btn" id="startBtn" title="Add the first step"><span data-icon="plus" data-size="26"></span></button>
+          <b>Add your first step</b>
+          <p>Start with a trigger. After that, a <i>+</i> appears after every step so you can keep going. No dragging needed.</p>
+        </div>
+
+        <div class="coach" id="coach" hidden>Click the <b>+</b> to add the next step. It connects automatically.</div>
+
+        <!-- contextual menu -->
+        <div class="ctx" id="ctx" hidden></div>
+
+        <div class="toolbar" id="toolbar">
+          <button class="tb" id="tbTools" title="Tools panel"><span data-icon="plus" data-size="20"></span></button>
+          <button class="tb" id="tbNew" title="New workflow"><span data-icon="file" data-size="20"></span></button>
+          <button class="tb" id="tbHistory" title="Run history"><span data-icon="clock" data-size="20"></span></button>
+          <button class="tb" id="tbZoomIn" title="Zoom in"><span data-icon="zoomIn" data-size="20"></span></button>
+          <button class="tb" id="tbZoomOut" title="Zoom out"><span data-icon="zoomOut" data-size="20"></span></button>
+          <button class="tb" id="tbFit" title="Fit to screen"><span data-icon="fit" data-size="20"></span></button>
+          <button class="tb" id="tbImport" title="Import JSON"><span data-icon="upload" data-size="20"></span></button>
+          <button class="tb" id="tbExport" title="Export JSON"><span data-icon="download" data-size="20"></span></button>
+        </div>
+
+        <div class="history-pop" id="historyPop" hidden></div>
+        <div class="minimap" id="minimap"><canvas id="mmCanvas" width="400" height="240"></canvas></div>
+      </section>
+
+      <section class="logs" id="logs">
+        <button class="logs-head" id="logsHead">
+          <span>Logs</span><span class="logs-count" id="logCount"></span>
+          <span class="logs-chev" data-icon="chevron" data-size="16"></span>
+        </button>
+        <div class="logs-body" id="logsBody"></div>
+      </section>
+    </div>
+
+    <!-- only used for the selected node's settings. No tool library in this approach. -->
+    <aside class="panel closed" id="panel">
+      <div class="panel-view" id="toolsView">
+        <div class="search"><input id="toolSearch" type="text"></div>
+        <div class="cats" id="cats"></div>
+        <button id="panelClose" hidden></button>
+      </div>
+
+      <div class="panel-view" id="configView" hidden>
+        <div class="panel-head cfg-head">
+          <button class="icon-btn" id="cfgBack" title="Close settings"><span data-icon="x" data-size="18"></span></button>
+          <div class="cfg-ico" id="cfgIcon"></div>
+          <div class="cfg-titles">
+            <h2 id="cfgTitle"></h2>
+            <p id="cfgSub"></p>
+          </div>
+        </div>
+        <div class="cfg-body">
+          <div class="cfg-conn" id="cfgConn"></div>
+          <div id="cfgForm"></div>
+        </div>
+        <div class="cfg-foot">
+          <button class="btn btn-danger" id="cfgDelete"><span data-icon="trash" data-size="16"></span>Delete node</button>
+        </div>
+      </div>
+
+      <div class="panel-foot">AgentBuilder v0.2.0</div>
+    </aside>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" accept="application/json,.json" hidden>
+
+<script src="nodes.js?v=4"></script>
+<script src="app.js?v=4"></script>
+<script src="option6.js"></script>
+</body>
+</html>
