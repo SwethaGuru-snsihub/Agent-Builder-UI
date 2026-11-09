@@ -8,8 +8,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="option3.css">
+<style>
+  /* AI Generate opens an assistant panel on this page instead of leaving for Option 3 */
+  .landing, #chatNew { display: none !important; }
+  .chat { display: none; }
+  body.ai-open .chat { display: flex; }
+  .chat-head .icon-btn { margin-left: auto; }
+  #btnAI.on { background: #f7f5ff; border-color: #d9d0ff; color: #4b2fd6; }
+</style>
 </head>
-<body>
+<body data-ai="1">
 <div id="app">
 
   <header class="topbar">
@@ -30,6 +39,23 @@
   </header>
 
   <div class="main">
+    <aside class="chat" id="chat">
+      <div class="chat-head">
+        <b>AI Assistant</b>
+        <button class="icon-btn" id="chatNew" title="New chat"></button>
+        <button class="icon-btn" id="chatClose" title="Close"><span data-icon="x" data-size="18"></span></button>
+      </div>
+      <div class="chat-msgs" id="msgs"></div>
+      <div class="chat-foot">
+        <div class="sugg" id="sugg"></div>
+        <div class="composer">
+          <textarea id="chatInput" rows="3" placeholder="Describe what to build or change..."></textarea>
+          <button class="send" id="chatSend" title="Send"></button>
+        </div>
+        <div class="chat-note">AI can make mistakes. Review the workflow before you run it.</div>
+      </div>
+    </aside>
+
     <div class="work">
       <section class="canvas" id="canvas">
         <div class="world" id="world">
@@ -112,6 +138,23 @@
 <input type="file" id="fileInput" accept="application/json,.json" hidden>
 
 <script src="nodes.js?v=4"></script>
+<div class="landing" id="landing" hidden>
+  <button id="landX"></button><textarea id="landInput"></textarea><button id="landSend"></button><div id="landEx"></div><button id="landTpl"></button><button id="landBlank"></button>
+</div>
+
 <script src="app.js?v=4"></script>
+<script src="option3.js?v=4"></script>
+<script>
+(function () {
+  var btn = document.getElementById('btnAI'), body = document.body;
+  function open(on) {
+    body.classList.toggle('ai-open', on); btn.classList.toggle('on', on);
+    if (on) setTimeout(function () { document.getElementById('chatInput').focus(); }, 50);
+  }
+  document.getElementById('msgs').innerHTML = '<div class="msg ai"><div class="av">' + ico('sparkles', 14) + '</div><div class="body"><p>Hi! Describe what you want to automate and I will build it on the canvas. If the canvas already has nodes, I can add, remove or swap steps.</p></div></div>';
+  btn.addEventListener('click', function () { open(!body.classList.contains('ai-open')); });
+  document.getElementById('chatClose').addEventListener('click', function () { open(false); });
+})();
+</script>
 </body>
 </html>

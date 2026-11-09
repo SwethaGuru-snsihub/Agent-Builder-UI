@@ -193,7 +193,7 @@
     $('#barChip').textContent = o.ready ? 'Live demo' : 'Planned'; $('#barChip').className = 'chip' + (o.ready ? ' ready' : '');
     $('#barPrev').disabled = o.id === 1; $('#barNext').disabled = o.id === OPTIONS.length;
     $('#barAbout').style.display = o.ready ? '' : 'none';
-    if (o.ready) { stage.innerHTML = `<iframe src="${o.file}?v=4" title="${esc(o.title)} demo"></iframe>`; }
+    if (o.ready) { stage.innerHTML = `<iframe src="${o.file}?v=5" title="${esc(o.title)} demo"></iframe>`; }
     else { stage.innerHTML = plannedPage(o); stage.scrollTop = 0; }
   }
   window.addEventListener('hashchange', route);
