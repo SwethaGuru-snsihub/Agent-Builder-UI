@@ -146,8 +146,8 @@ const RAW_NODES = [
 
 const NODE_DEFS = RAW_NODES.map(([cat, id, name, desc, o = {}]) => ({
   cat, id, name, desc,
-  inputs: cat === 'triggers' ? 0 : 1,
-  outputs: o.outputs || [''],
+  inputs: cat === 'triggers' || id === 'note' ? 0 : 1,
+  outputs: id === 'note' ? [] : (o.outputs || ['']),
   color: o.color || null,
   abbr: o.abbr || null
 }));

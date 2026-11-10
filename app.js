@@ -24,7 +24,7 @@
   /* ---------- geometry ---------- */
   function dims(n) {
     const outs = DEFS[n.type].outputs.length;
-    return { H: outs > 1 ? 28 + outs * 26 : 64, outs };
+    return { H: n.type === 'note' ? 112 : (outs > 1 ? 28 + outs * 26 : 64), outs };
   }
   function outY(n, i) { const { H, outs } = dims(n); return outs > 1 ? (H / (outs + 1)) * (i + 1) : H / 2; }
   const inPos = n => ({ x: n.x, y: n.y + dims(n).H / 2 });
@@ -95,11 +95,11 @@
     const d = DEFS[n.type], cat = CATMAP[d.cat], { H } = dims(n);
     const multi = d.outputs.length > 1;
     const el = document.createElement('div');
-    el.className = 'node'; el.dataset.id = n.id;
+    el.className = d.id === 'note' ? 'node note' : 'node'; el.dataset.id = n.id;
     el.style.cssText = `left:${n.x}px;top:${n.y}px;height:${H}px;`;
     let h = '';
     if (d.inputs) h += `<div class="port in" style="top:${H / 2 - 8}px"></div>`;
-    h += `<div class="node-ico" style="background:${d.color || cat.color}">${d.abbr ? d.abbr : ico(cat.icon, 20)}</div>`;
+    if (d.id !== 'note') h += `<div class="node-ico" style="background:${d.color || cat.color}">${d.abbr ? d.abbr : ico(cat.icon, 20)}</div>`;
     h += `<div class="node-txt${multi ? ' pad' : ''}"><div class="node-title"></div><div class="node-sub"></div></div>`;
     h += '<div class="badge"></div>';
     d.outputs.forEach((o, i) => {
@@ -423,11 +423,11 @@
   $('#tbZoomIn').addEventListener('click', () => { const r = canvas.getBoundingClientRect(); zoomAt(r.width / 2, r.height / 2, 1.2); });
   $('#tbZoomOut').addEventListener('click', () => { const r = canvas.getBoundingClientRect(); zoomAt(r.width / 2, r.height / 2, 1 / 1.2); });
   $('#tbFit').addEventListener('click', fitView);
+  // The page icon in the canvas toolbar is the Sticky Note tool (same as the live Agent Builder), not "New workflow".
   $('#tbNew').addEventListener('click', () => {
-    if (!state.nodes.length) return toast('The canvas is already empty');
-    if (!newArmed) { newArmed = true; toast('Click “New” again to clear the canvas'); setTimeout(() => newArmed = false, 3000); return; }
-    newArmed = false; state.nodes = []; state.edges = []; doneEdges.clear(); nodeStatus.clear(); state.sel = null;
-    renderAll(); renderPanel(true); commit(); toast('Canvas cleared · use Undo (Ctrl+Z) to restore');
+    const c0 = viewCenterWorld();
+    addNode('note', c0.x - W / 2, c0.y - 32);
+    toast('Sticky note added · type your note in the settings panel');
   });
   $('#tbExport').addEventListener('click', () => {
     if (!state.nodes.length) return toast('Nothing to export yet');
@@ -521,7 +521,7 @@
     const incoming = new Set(state.edges.map(e => e.to));
     let roots = state.nodes.filter(n => DEFS[n.type].cat === 'triggers'), warnings = 0, cost = 0;
     if (!roots.length) {
-      roots = state.nodes.filter(n => !incoming.has(n.id)); warnings++;
+      roots = state.nodes.filter(n => !incoming.has(n.id) && n.type !== 'note'); warnings++;
       log('warn', 'Workflow', 'No trigger node found, starting from the first unconnected node');
     }
     const seen = new Set(), queue = [...roots];
